@@ -1,0 +1,10 @@
+export const PRODUCT_CATEGORIES=['Romance',
+'Fantasy',
+'Mystery',
+'Thriller',
+'Classics',
+'History',
+'Crime',
+'Poetry',
+'Drama',
+]
