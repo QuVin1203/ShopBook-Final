@@ -6,6 +6,7 @@ import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 //Quản lý trạng thái (isLoading, error, data, v.v.) mà không cần code thủ công.
 
 const API_URL = process.env.REACT_APP_API_URL;
+console.log("API_URL =", API_URL);
 export const productApi=createApi({
     reducerPath:'productApi',
     baseQuery:fetchBaseQuery({baseUrl:`${API_URL}/api/v1`}),
