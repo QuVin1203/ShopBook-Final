@@ -2,6 +2,13 @@ import express from 'express'
 const app=express()
 
 
+import cors from 'cors'
+app.use(cors({
+    origin: "https://shop-book-final.vercel.app",
+    credentials: true
+}))
+
+
 
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
