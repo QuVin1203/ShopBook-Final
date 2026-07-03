@@ -4,9 +4,11 @@ import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 //import { getProducts } from '../../../../Back-end/controllers/productControllers.js'
 //Gửi request đến backend.
 //Quản lý trạng thái (isLoading, error, data, v.v.) mà không cần code thủ công.
+
+const API_URL = process.env.REACT_APP_API_URL;
 export const productApi=createApi({
     reducerPath:'productApi',
-    baseQuery:fetchBaseQuery({baseUrl:'/api/v1'}),
+    baseQuery:fetchBaseQuery({baseUrl:`${API_URL}/api/v1`}),
     tagTypes:['Product','AdminProducts','Reviews'],
     endpoints:(builder)=>({
         getProducts: builder.query({

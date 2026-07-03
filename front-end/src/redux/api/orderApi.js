@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const API_URL = process.env.REACT_APP_API_URL;
 export const orderApi = createApi({
   reducerPath: "orderApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: "/api/v1",
+    baseUrl: `${API_URL}/api/v1`,
   }),
 
   tagTypes: ["Order", "AdminOrders"],

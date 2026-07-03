@@ -2,9 +2,11 @@ import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import { setIsAuthenticated, setLoading, setUser } from '../features/userSlice'
 
 
+
+const API_URL = process.env.REACT_APP_API_URL;
 export const userApi=createApi({
     reducerPath:'userApi',
-    baseQuery:fetchBaseQuery({baseUrl:'/api/v1'}), 
+    baseQuery:fetchBaseQuery({baseUrl:`${API_URL}/api/v1`}), 
     tagTypes:['User','AdminUsers','AdminUser'], //tất cả các truy vấn sẽ được gửi đến đường dẫn bắt đầu bằng '/api/v1'
     endpoints:(builder)=>({                        //định nghĩa endpoint login
         getMe:builder.query({
