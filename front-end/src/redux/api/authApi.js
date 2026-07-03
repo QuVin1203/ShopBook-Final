@@ -6,7 +6,7 @@ import { userApi } from './userApi'
 const API_URL = process.env.REACT_APP_API_URL;
 export const authApi=createApi({
     reducerPath:'authApi',
-    baseQuery:fetchBaseQuery({baseUrl:`${API_URL}/api/v1`}),  //tất cả các truy vấn sẽ được gửi đến đường dẫn bắt đầu bằng '/api/v1'
+    baseQuery:fetchBaseQuery({baseUrl:`${API_URL}/api/v1`, credentials: "include"}),  //tất cả các truy vấn sẽ được gửi đến đường dẫn bắt đầu bằng '/api/v1'
     endpoints:(builder)=>({                        //định nghĩa endpoint login
         
         register:builder.mutation({               //builder.mutation() dùng cho các request có thay đổi dữ liệu (POST, PUT, DELETE...).

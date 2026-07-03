@@ -5,7 +5,7 @@ export const orderApi = createApi({
   reducerPath: "orderApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: `${API_URL}/api/v1`,
+    baseUrl: `${API_URL}/api/v1`, credentials: "include"
   }),
 
   tagTypes: ["Order", "AdminOrders"],

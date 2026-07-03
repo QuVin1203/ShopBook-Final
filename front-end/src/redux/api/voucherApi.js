@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const API_URL = process.env.REACT_APP_API_URL;
 export const voucherApi = createApi({
   reducerPath: "voucherApi",
-  baseQuery: fetchBaseQuery({ baseUrl: `${API_URL}/api/v1` }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${API_URL}/api/v1`, credentials: "include" }),
   tagTypes: ["Vouchers"],
 
   endpoints: (builder) => ({

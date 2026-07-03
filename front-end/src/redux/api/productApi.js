@@ -9,7 +9,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 console.log("API_URL =", API_URL);
 export const productApi=createApi({
     reducerPath:'productApi',
-    baseQuery:fetchBaseQuery({baseUrl:`${API_URL}/api/v1`}),
+    baseQuery:fetchBaseQuery({baseUrl:`${API_URL}/api/v1`, credentials: "include"}),
     tagTypes:['Product','AdminProducts','Reviews'],
     endpoints:(builder)=>({
         getProducts: builder.query({
