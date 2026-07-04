@@ -1,5 +1,5 @@
  //create token and save in the cookie
-export default(user,statusCode,res)=>{
+/*export default(user,statusCode,res)=>{
 
     //create JWT Token
     const token = user.getJwtToken()
@@ -17,4 +17,25 @@ export default(user,statusCode,res)=>{
 
 
 //nhận thông tin về người dùng và trả về một phản hồi HTTP chứa một JWT token, cũng như đặt một cookie c
-//ó tên là 'token' để lưu trữ token đó trong trình duyệt của người dùng
+//ó tên là 'token' để lưu trữ token đó trong trình duyệt của người dùng*/
+export default (user, statusCode, res) => {
+  const token = user.getJwtToken();
+
+  const options = {
+    expires: new Date(
+      Date.now() +
+        process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "PRODUCTION",
+    sameSite: process.env.NODE_ENV === "PRODUCTION" ? "none" : "lax",
+  };
+
+  res
+    .status(statusCode)
+    .cookie("token", token, options)
+    .json({
+      success: true,
+      token,
+    });
+};
