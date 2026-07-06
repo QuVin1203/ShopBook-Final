@@ -398,12 +398,19 @@ export const  getSales = catchAsyncErrors( async (req,res,next)=>{
     startDate,
     endDate
   );
-    const shippedOrders = await Order.countDocuments({
+     const shippedOrders = await Order.countDocuments({
     orderStatus: "Shipped",
+    createdAt: {
+      $gte: startDate,
+      $lte: endDate,
+    },
   });
-
-  const deliveredOrders = await Order.countDocuments({
+   const deliveredOrders = await Order.countDocuments({
     orderStatus: "Delivered",
+    deliveredAt: {
+      $gte: startDate,
+      $lte: endDate,
+    },
   });
 
   const topSellingBooks = await Product.find({ sold: { $gt: 0 } })
