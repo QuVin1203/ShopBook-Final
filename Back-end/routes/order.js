@@ -4,7 +4,7 @@ const router=express.Router()
 import { authorizeRoles, isAutheticatedUser } from "../middlewares/auth.js";
 import { allOrders, deleteOrder, getOrderDetails, myOrders, newOrder, updateOrder ,confirmPayment,} from "../controllers/orderController.js";
 import { getSales } from "../controllers/productControllers.js";
-
+//import { getDashboardSales } from "../controllers/orderController.js";
 
 router.route('/orders/new').post(isAutheticatedUser,newOrder)
 router.route('/orders/:id').get(isAutheticatedUser,getOrderDetails)
