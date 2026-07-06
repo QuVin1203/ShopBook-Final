@@ -312,20 +312,21 @@ res.status(200).json({
 async function getSalesData(startDate, endDate) {
   const salesData = await Order.aggregate([
     {
-      $match: {
-        createdAt: {
-          $gte: new Date(startDate),
-          $lte: new Date(endDate),
-        },
-      },
+     $match: {
+    orderStatus: "Delivered",
+
+    deliveredAt: {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate),
     },
+},
     {
       $group: {
         _id: {
           date: {
             $dateToString: {
               format: "%Y-%m-%d",
-              date: "$createdAt",
+              date: "$deliveredAt",
             },
           },
         },
