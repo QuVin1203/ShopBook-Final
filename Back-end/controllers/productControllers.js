@@ -420,6 +420,8 @@ const recentOrders = await Order.find()
     res.status(200).json({
   totalSales,
   totalNumOrders,
+  shippedOrders,
+  deliveredOrders,
   sales: salesData,
   topSellingBooks,
   recentOrders,
