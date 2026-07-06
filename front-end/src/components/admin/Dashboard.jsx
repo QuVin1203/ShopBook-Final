@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AdminLayout from "../layout/AdminLayout";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import SaleCharts from "../charts/SaleCharts.jsx";
+
 import { useLazyGetDashboardSalesQuery } from "../../redux/api/orderApi.js";
 import toast from "react-hot-toast";
 import Loader from "../layout/Loader.jsx";
@@ -107,18 +107,21 @@ const Dashboard = () => {
 
         </div>
 
-        <div className="dashboard-chart-card">
-          <div className="chart-header">
-            <h3>Sales Chart</h3>
-            <p>Revenue performance by selected date range.</p>
-          </div>
+         <div className="dashboard-stat-card shipping-card">
+    <div className="stat-icon">🚚</div>
+    <div>
+      <p>Shipping</p>
+      <h2>{data?.shippedOrders || 0}</h2>
+    </div>
+  </div>
 
-          {data?.sales?.length > 0 ? (
-            <SaleCharts salesData={data?.sales} />
-          ) : (
-            <div className="empty-chart">No sales data available.</div>
-          )}
-        </div>
+  <div className="dashboard-stat-card delivered-card">
+    <div className="stat-icon">✅</div>
+    <div>
+      <p>Delivered</p>
+      <h2>{data?.deliveredOrders || 0}</h2>
+    </div>
+  </div>
 
        
 

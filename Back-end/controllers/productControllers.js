@@ -398,6 +398,14 @@ export const  getSales = catchAsyncErrors( async (req,res,next)=>{
     startDate,
     endDate
   );
+    const shippedOrders = await Order.countDocuments({
+    orderStatus: "Shipped",
+  });
+
+  const deliveredOrders = await Order.countDocuments({
+    orderStatus: "Delivered",
+  });
+
   const topSellingBooks = await Product.find({ sold: { $gt: 0 } })
   .sort({ sold: -1 })
   .limit(5)
