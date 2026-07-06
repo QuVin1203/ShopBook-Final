@@ -2,7 +2,7 @@ import express from "express";
 const router=express.Router()
 
 import { authorizeRoles, isAutheticatedUser } from "../middlewares/auth.js";
-import { allOrders, deleteOrder, getOrderDetails, myOrders, newOrder, updateOrder ,confirmPayment,getDashboardSales,} from "../controllers/orderController.js";
+import { allOrders, deleteOrder, getOrderDetails, myOrders, newOrder, updateOrder ,confirmPayment,} from "../controllers/orderController.js";
 import { getSales } from "../controllers/productControllers.js";
 
 
@@ -12,7 +12,7 @@ router.route('/me/orders').get(isAutheticatedUser,myOrders)
 
 router
 .route('/admin/get_sales')
-.get(isAutheticatedUser,authorizeRoles('admin'),getDashboardSales)
+.get(isAutheticatedUser,authorizeRoles('admin'),getSales)
 
 router
 .route('/admin/orders')
