@@ -295,6 +295,7 @@ export const deleteReview=catchAsyncErrors(async(req,res,next)=>{
 export const  canUserReview = catchAsyncErrors( async (req,res)=>{ 
     let orders=await Order.find({
         user:req.user._id,
+        orderStatus: "Delivered", // Chỉ đơn đã giao
         'orderItems.product':req.query.productId,
     }) 
 
