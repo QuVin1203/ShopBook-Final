@@ -17,11 +17,15 @@ const Header = () => {
 
   const isAdmin = user?.role === "admin";
 
-  const logoutHandler = () => {
-    logout();
-    navigate(0);
-  };
-
+  const logoutHandler = async () => {
+  try {
+    await logout().unwrap();
+    navigate("/");
+    window.location.reload();
+  } catch (err) {
+    console.log(err);
+  }
+};
   return (
     <>
       <nav className="navbar row">

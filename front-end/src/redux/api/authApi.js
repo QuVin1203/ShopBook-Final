@@ -1,5 +1,6 @@
 import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import { userApi } from './userApi'
+import { logout } from "../features/userSlice";
 
 
 //fetchBaseQuery : fetchBaseQuery: là hàm tiện ích giúp bạn gửi request đến backend mà không cần tự viết fetch() hay axios.
@@ -37,10 +38,18 @@ export const authApi=createApi({
                 {console.log(error)}
             }
         }),
-        logout:builder.query({
-            query:()=>'/logout'
-        })
-        
+        logout: builder.query({
+    query: () => "/logout",
+
+    async onQueryStarted(arg,{dispatch,queryFulfilled}){
+        try{
+            await queryFulfilled;
+            dispatch(logout());
+        }catch(err){
+            console.log(err);
+        }
+    }
+})
         
         
         

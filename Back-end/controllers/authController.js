@@ -170,6 +170,8 @@ export const logoutUser=catchAsyncErrors(async(req,res,next) =>{
     res.cookie('token',null,{ //server gửi lại req cookie token nhưng value =null, cookie cũ bị thay thé
         expires:new Date(Date.now()), //cho cookie hết hạn
         httpOnly:true,
+         sameSite: "none",
+    secure: true,
     })
     res.status(200).json({
         message:'Logout',
