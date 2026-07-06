@@ -162,58 +162,66 @@ export const deleteOrder = catchAsyncErrors(async (req, res, next) => {
 });
 
 async function getSalesData(startDate, endDate) {
-  const salesData = await Order.aggregate([
-    {
-      $match: {
-        createdAt: {
-          $gte: new Date(startDate),
-          $lte: new Date(endDate),
-        },
-      },
-    },
-    {
-      $group: {
-        _id: {
-          date: {
-            $dateToString: {
-              format: "%Y-%m-%d",
-              date: "$createdAt",
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    end.setHours(23, 59, 59, 999);
+
+    const salesData = await Order.aggregate([
+        {
+            $match: {
+                orderStatus: "Delivered",
+
+                deliveredAt: {
+                    $gte: start,
+                    $lte: end,
+                },
             },
-          },
         },
+        {
+            $group: {
+                _id: {
+                    date: {
+                        $dateToString: {
+                            format: "%Y-%m-%d",
+                            date: "$deliveredAt",
+                        },
+                    },
+                },
 
-        totalSales: { $sum: "$itemsPrice" },
+                totalSales: { $sum: "$itemsPrice" },
 
-        totalShippingRevenue: {
-          $sum: {
-            $subtract: [
-              "$shippingAmount",
-              { $ifNull: ["$shippingDiscount", 0] },
-            ],
-          },
+                totalShippingRevenue: {
+                    $sum: {
+                        $subtract: [
+                            "$shippingAmount",
+                            { $ifNull: ["$shippingDiscount", 0] },
+                        ],
+                    },
+                },
+
+                totalVoucherDiscount: {
+                    $sum: { $ifNull: ["$discountAmount", 0] },
+                },
+
+                totalShippingDiscount: {
+                    $sum: { $ifNull: ["$shippingDiscount", 0] },
+                },
+
+                totalPayments: { $sum: "$totalAmount" },
+
+                numOrders: { $sum: 1 },
+            },
         },
-
-        totalVoucherDiscount: {
-          $sum: { $ifNull: ["$discountAmount", 0] },
+        {
+            $sort: {
+                "_id.date": 1,
+            },
         },
+    ]);
 
-        totalShippingDiscount: {
-          $sum: { $ifNull: ["$shippingDiscount", 0] },
-        },
-
-        totalPayments: { $sum: "$totalAmount" },
-
-        numOrders: { $sum: 1 },
-      },
-    },
-    {
-      $sort: {
-        "_id.date": 1,
-      },
-    },
-  ]);
-
-  return salesData;
+    return salesData;
 }
 
 export const getDashboardSales = catchAsyncErrors(async (req, res, next) => {
