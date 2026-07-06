@@ -319,7 +319,7 @@ async function getSalesData(startDate, endDate) {
         $gte: new Date(startDate),
         $lte: new Date(endDate),
     },
-},
+},},
     {
       $group: {
         _id: {
