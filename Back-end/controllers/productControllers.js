@@ -331,14 +331,7 @@ async function getSalesData(startDate, endDate) {
             },
           },
         },
-        totalSales: {
-  $sum: {
-    $subtract: [
-      "$itemsPrice",
-      { $ifNull: ["$discountAmount", 0] }
-    ]
-  }
-},
+        totalSales: { $sum: "$totalAmount" },
         numOrders: { $sum: 1 },
       },
     },
