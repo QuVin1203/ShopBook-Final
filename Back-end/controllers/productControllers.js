@@ -310,7 +310,7 @@ res.status(200).json({
 })
 
 //
-async function getSalesData(startDate, endDate) {
+/*async function getSalesData(startDate, endDate) {
   const salesData = await Order.aggregate([
     {
      $match: {
@@ -388,7 +388,7 @@ const datesBetween = getDatesBetween(startDate, endDate);
 }
 
 //getsales data /api/v1/admin/get_sales
-export const  getSales = catchAsyncErrors( async (req,res,next)=>{ 
+/*export const  getSales = catchAsyncErrors( async (req,res,next)=>{ 
     const startDate=new Date(req.query.startDate)
     const endDate=new Date(req.query.endDate)
 
@@ -435,7 +435,7 @@ const recentOrders = await Order.find()
   recentOrders,
 });
 })
-
+*/
 
 
 /*
