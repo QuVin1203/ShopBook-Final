@@ -309,7 +309,7 @@ export const getDashboardSales = catchAsyncErrors(async (req, res, next) => {
     .select("name sold");
 
   const recentOrders = await Order.find({
-    createdAt: {
+      deliveredAt: {
       $gte: start,
       $lte: end,
     },
