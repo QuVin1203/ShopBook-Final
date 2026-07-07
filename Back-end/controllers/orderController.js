@@ -162,77 +162,82 @@ export const deleteOrder = catchAsyncErrors(async (req, res, next) => {
 });
 
 async function getSalesData(startDate, endDate) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
 
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+  end.setHours(23, 59, 59, 999);
 
-    end.setHours(23, 59, 59, 999);
-
-    const salesData = await Order.aggregate([
-        {
-            $match: {
-                orderStatus: "Delivered",
-
-                deliveredAt: {
-                    $gte: start,
-                    $lte: end,
-                },
-            },
+  const salesData = await Order.aggregate([
+    {
+      $match: {
+        orderStatus: "Delivered",
+        deliveredAt: {
+          $gte: start,
+          $lte: end,
         },
-        {
-            $group: {
-                _id: {
-                    date: {
-                        $dateToString: {
-                            format: "%Y-%m-%d",
-                            date: "$deliveredAt",
-                        },
-                    },
-                },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          date: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$deliveredAt",
+            },
+          },
+        },
 
-                totalSales: {
-  $sum: {
-    $subtract: [
-      "$itemsPrice",
-      {
-        $add: [
-          { $ifNull: ["$discountAmount", 0] }
+        // Doanh thu sách (không tính ship)
+        totalSales: {
+    $sum: {
+        $subtract: [
+            "$totalAmount",
+            {
+                $subtract: [
+                    "$shippingAmount",
+                    { $ifNull: ["$shippingDiscount", 0] }
+                ]
+            }
         ]
-      }
-    ]
-  }
+    }
 },
 
-                totalShippingRevenue: {
-                    $sum: {
-                        $subtract: [
-                            "$shippingAmount",
-                            { $ifNull: ["$shippingDiscount", 0] },
-                        ],
-                    },
-                },
-
-                totalVoucherDiscount: {
-                    $sum: { $ifNull: ["$discountAmount", 0] },
-                },
-
-                totalShippingDiscount: {
-                    $sum: { $ifNull: ["$shippingDiscount", 0] },
-                },
-
-                totalPayments: { $sum: "$totalAmount" },
-
-                numOrders: { $sum: 1 },
-            },
+        // Doanh thu ship
+        totalShippingRevenue: {
+          $sum: {
+            $subtract: [
+              "$shippingAmount",
+              { $ifNull: ["$shippingDiscount", 0] },
+            ],
+          },
         },
-        {
-            $sort: {
-                "_id.date": 1,
-            },
-        },
-    ]);
 
-    return salesData;
+        totalVoucherDiscount: {
+          $sum: { $ifNull: ["$discountAmount", 0] },
+        },
+
+        totalShippingDiscount: {
+          $sum: { $ifNull: ["$shippingDiscount", 0] },
+        },
+
+        totalPayments: {
+          $sum: "$totalAmount",
+        },
+
+        numOrders: {
+          $sum: 1,
+        },
+      },
+    },
+    {
+      $sort: {
+        "_id.date": 1,
+      },
+    },
+  ]);
+
+  return salesData;
 }
 
 export const getDashboardSales = catchAsyncErrors(async (req, res, next) => {
@@ -270,8 +275,31 @@ export const getDashboardSales = catchAsyncErrors(async (req, res, next) => {
     0
   );
 
-  const netRevenue =
-    totalSales + totalShippingRevenue - totalVoucherDiscount;
+  // Book Revenue + Shipping Revenue
+  const netRevenue = totalSales + totalShippingRevenue;
+
+  // Chuyển về đầu ngày - cuối ngày
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  end.setHours(23, 59, 59, 999);
+
+  // Đơn đang giao
+  const shippedOrders = await Order.countDocuments({
+    orderStatus: "Shipped",
+    createdAt: {
+      $gte: start,
+      $lte: end,
+    },
+  });
+
+  // Đơn đã giao
+  const deliveredOrders = await Order.countDocuments({
+    orderStatus: "Delivered",
+    deliveredAt: {
+      $gte: start,
+      $lte: end,
+    },
+  });
 
   const topSellingBooks = await Product.find({
     sold: { $gt: 0 },
@@ -280,7 +308,12 @@ export const getDashboardSales = catchAsyncErrors(async (req, res, next) => {
     .limit(5)
     .select("name sold");
 
-  const recentOrders = await Order.find()
+  const recentOrders = await Order.find({
+    createdAt: {
+      $gte: start,
+      $lte: end,
+    },
+  })
     .sort({ createdAt: -1 })
     .limit(5)
     .populate("user", "name")
@@ -295,7 +328,11 @@ export const getDashboardSales = catchAsyncErrors(async (req, res, next) => {
     totalShippingDiscount,
     netRevenue,
     totalPayments,
+
     totalNumOrders,
+    shippedOrders,
+    deliveredOrders,
+
     sales,
     topSellingBooks,
     recentOrders,
