@@ -317,8 +317,8 @@ async function getSalesData(startDate, endDate) {
     orderStatus: "Delivered",
 
     deliveredAt: {
-        $gte: new Date(startDate),
-        $lte: new Date(endDate),
+         $gte: start,
+          $lte: end,
     },
 },},
     {
